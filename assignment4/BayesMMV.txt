@@ -2,13 +2,13 @@ P(A|B) = P(B|A)(A) / P(B)
 
 = (1)(0.01)/1 x 0.01+(0.05)(0.99)
 
-=0.01/0.01+0.0495
+= 0.01/0.01+0.0495
 
-=0.01/0.0595
+= 0.01/0.0595
 
-=0.168
+= 0.168
 
-=16.8% probability of having MMV
+= 16.8% probability of having MMV
 
 I would tell my friend that his chance of actually having MMV is relatively low so they should not panic from the positive result. I would
 simplify my explanation by explaining that in an arbitrary population of 100, we would expect 5 of those to test as false positives, and
