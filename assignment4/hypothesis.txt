@@ -1,1 +1,13 @@
-I hypothesize that males that percieve high levels of sperm competition (housed with rivals) wil
+I hypothesize that females who mate with males that perceive high levels of sperm competition (housed with rivals) will have shorter lifespans and decreased fecundity compared to females who mate with males that perceive low levels of sperm competition (housed alone).
+
+Lifespan: I plan to conduct a survival analysis using the Surv function from the coxme package:
+Surv(lifespan,alive) ~ treatment + (treatment|line)
+
+I would then use the summary function to determine the p-value for each factor and their interactions.
+
+Fecundity: I plan to construct a linear model with offspring production as a gaussian response variable, male treatment as a fixed effect, genetic line as a random effect crossed with treatment, day as a random effect, and day as random interaction nested with all other factor combinations:
+
+offspring~treatment + (line|treatment) + (1|day) + (1|day:treatment) + (1|day:line) + (day:treatment:line)
+
+I would use a log-likelihood ratio chi-square test from the Anova function from the car package to calculate a p-value for the fixed effect of treatment.
+To calculate the 95% confidence interval for the variance components of the random effects, I will use the bootMer function to bootstrap 10000 samples, and the p-values of each variance component using a permutation test approach.
