@@ -8,6 +8,7 @@ single <- filter(dat,treatment=="single")
 single2 <- single %>%
 mutate(first.d = first.d) %>%
 mutate(zfirst.d = first.d)
+## BMB: can combine mutate() statements with ,
 
 #Creates boxplot for each treatment, and reaction norm plot for each genetic line
 ggplot(figure,aes(x= treatment,y= mean.duration))+ 
@@ -26,7 +27,10 @@ ylab("Duration of first mating (s)")+
 geom_boxplot(data= single2, aes(x='zfirst.d', y= zfirst.d))+
 geom_boxplot(data= rival, aes(x='first.d', y= first.d))
 
-#Creates scatter plot of the genetic correlation between duration of first mating and latency of second
+## BMB: if you have repeated theme() elements, it's better to set
+## them globally, first, rather than repeating them
+
+##Creates scatter plot of the genetic correlation between duration of first mating and latency of second
 ggplot(figure, aes(x=mean.latency, y=mean.duration, color=treatment))+
 #Makes points open circles
 geom_point(shape=1) +
@@ -38,8 +42,9 @@ theme(text=element_text(family="Times",size=12))+
 theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+
 xlab("Latency until second mating (s)")+
 ylab("Duration of first mating (s)")
+## BMB: what about confidence intervals? (there are valid reasons to leave them out, but the default should be including them).  I think there are better possible colour schemes (although you did modify the default ...)
 
-#Binomial blot looking at probability of remating depending on first mating duration
+#Binomial plot looking at probability of remating depending on first mating duration
 ggplot(dat,aes(x=first.d,y=mating,colour=treatment))+
 theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+
 scale_colour_hue(l=60) + 
@@ -50,3 +55,6 @@ stat_sum(alpha=0.25)+
 geom_smooth(method="glm",se=FALSE,
               method.args=list(family="binomial"),
               formula=y~poly(x,2),alpha=0.1)
+## BMB: see previous comments about CIs etc.
+
+## BMB: very attractive plots (I like your aesthetic choices), but not much description/justification of how you made your graphical choices? score: 2
