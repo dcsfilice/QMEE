@@ -15,3 +15,5 @@ simplify my explanation by explaining that in an arbitrary population of 100, we
 only expect one to actually have MMV. Therefore, if picked at random, you are more likely to be a false positive than actually have the
 disease. Furthermore, I would explain that in the unlikely case the positive test is true, they could simply use their symptoms to their
 advantage by becoming a statistics professor and teach a QMEE course.
+
+## JD: Are you sure your conclusion about your friend is well-founded?

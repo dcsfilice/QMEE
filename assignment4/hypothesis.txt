@@ -16,3 +16,6 @@ I would use a log-likelihood ratio chi-square test from the Anova function from 
 effect of treatment.
 To calculate the 95% confidence interval for the variance components of the random effects, I will use the bootMer function to bootstrap
 10000 samples, and the p-values of each variance component using a permutation test approach.
+
+JD: Nice ideas. I'm not following all of the details, and you might want to be open-minded, e.g., about assuming gaussian responses. I'm wondering how much you've thought about the advantages of survival analysis vs. using lifespan as a response variable (I'm not against survival analysis). Why do you want CIs for RE variance?
+## Week grade: Good (2/3)
