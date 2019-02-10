@@ -1,5 +1,7 @@
 # Test 1
-I hypothesize that males housed with rivals will mate for signifcantly longer compared to males housed alone. The classic way to approach this would be to use a t-test. I will test this by performing a permutation test using the lmperm package.
+I hypothesize that males housed with rivals will mate for signifcantly longer compared to males housed alone. The classic way to approach 
+this would be to use a t-test. I will test this by using the lmPerm package which takes a permutation approach to estimate differences 
+between variables fit to a linear model.
 
 # Test 2
 I also hypothesize that there will be significant genetic variation in how long males mate for (i.e. different genetic lines will display 
