@@ -27,7 +27,7 @@ per.line[1]<-as.data.frame(VarCorr(model))[1,4]
 #this randomly resamples the duration data to the different lines/treatments without replacement
 #then, uses the same model to re-estimate the variance component associated with genetic line and places each component into a data frame
 for (i in 2:nreps) {
-  perm.data <- dat[sample(nrow(dat),size=nrow(dat),replace=FALSE),]
+  perm.data<-dat[sample(nrow(dat),size=nrow(dat),replace=FALSE),]
   lmer.perm<-lmer(dat$first.d~perm.data$treatment+(perm.data$treatment|perm.data$line))
   per.line[i]<-as.data.frame(VarCorr(lmer.perm))[1,4]
 }
