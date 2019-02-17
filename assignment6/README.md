@@ -1,3 +1,6 @@
+# Refresher of hypothesis
+There is genetic variation in male mating duration.
+
 # Diagnostic plots
 
 1.) Residuals vs. fitted (linearity): 
