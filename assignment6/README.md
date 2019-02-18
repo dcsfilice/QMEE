@@ -19,3 +19,5 @@ relatively similar across means). Another good indication to use a linear model 
 Here, there are clearly no problematic outling residuals that we would have to worry about when using our data in a linear model.
 
 # Inferential plot
+
+This plot shows the model estimated means for each genetic line. The varying distribution of these means highlights the hypothesized presence of genetic variation associated with the phenotypic expression of mating duration.
