@@ -1,0 +1,10 @@
+model {
+	for (i in 1:N){
+		first.d[i] ~ dnorm(pred[i], tau)
+		pred[i] <- ma*treatment[i] + mb*line[i] + mab*treatment[i]*line[i]
+	}
+	ma ~ dnorm(0, .0001)
+	mb ~ dnorm(0, .0001)
+	mab ~ dnorm(0, .0001)
+	tau ~ dgamma(.001, .001)
+}
