@@ -22,5 +22,5 @@ print(bayesmod)
 #Now, let's take a frequenist approach to analyzing our model
 library(car)
 Anova(model)
-#Interesting, similar to our bayes model, we observe p-values < 0.5 for treatment and line alone, but not for their interaction
+#Interesting, similar to our bayes model, we observe p-values < 0.05 for treatment and line alone, but not for their interaction
 
