@@ -3,8 +3,8 @@ model {
 		first.d[i] ~ dnorm(pred[i], tau)
 		pred[i] <- ma*treatment[i] + mb*line[i] + mab*treatment[i]*line[i]
 	}
-	ma ~ dnorm(0, .0001)
-	mb ~ dnorm(0, .0001)
-	mab ~ dnorm(0, .0001)
+	ma ~ dnorm(0, .000001)
+	mb ~ dnorm(0, .000001)
+	mab ~ dnorm(0, .000001)
 	tau ~ dgamma(.001, .001)
 }
