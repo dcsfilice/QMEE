@@ -1,11 +1,20 @@
 model {
 	for (i in 1:N){
 		first.d[i] ~ dnorm(pred[i], tau)
-		pred[i] <- ma*treatment[i] + mb*line[i] + mab*treatment[i]*line[i] + int
+		pred[i] <- int + ma*(treatment[i]-1) +
+		      ifelse(line[i]>1,mb[line[i]-1],0) +
+		      ifelse(line[i]>1,mab[line[i]-1]*(treatment[i]-1))
 	}
+	## BMB: this is a crazy model for a few reasons
+	##  (1) no intercept?
+	##  (2) you are treating your treatment and line variables
+	##      as NUMERIC variables; that means you're fitting a linear
+	##      pattern
 	ma ~ dnorm(0, .000001)
-	mb ~ dnorm(0, .000001)
-	mab ~ dnorm(0, .000001)
+	for (i in 1:nline) {
+	   mb[i] ~ dnorm(0, .000001)
+	   mab[i] ~ dnorm(0, .000001)
+	}
 	int ~ dnorm(0, .000001)
 	tau ~ dgamma(.001, .001)
 }
