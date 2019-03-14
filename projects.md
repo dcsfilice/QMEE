@@ -1,5 +1,4 @@
 # Competitive experience and plasiticy in male-induced harm
-
 Please refer to README.md for a breif background on this topic.
 
 In this project, I study how the effect of previous competition influences male reproductive behaviours, and how these behavioural
@@ -8,7 +7,9 @@ associated with this plasticity.
 
 # Specfically, I predict:
 1.) Males previously housed with rival males will reduce the lifespan of their mates
+
 2.) Males previously housed with rivals and housed alone will have differential on the lifetime offspring production of their mates
+
 3.) There will be signifcant genetic variation associated with both these effects (i.e. in the plasticity)
 For the final project I plan on using a combination of mixed model techniques, permutation testing, and perhaps other multivariate statistical methods such as principal component analyses.
 
