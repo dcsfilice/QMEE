@@ -19,6 +19,7 @@ Anova(model1)
 #Now I want to play with something I'm a bit unsure about... bear with me
 dat2<-read.csv("offspring.csv")
 
+#count data, use poisson model
 #Treatment and day are fixed effects. Every line was tested between 2 treatments and across 10 days, so we should cross their effects (treatment|line)+(day|line)
 #The thing is, we may also look at three-way interaction - this is where things get messy and I don't know if what I'm doing makes sense 
 #does (treatment*day|line) make any sense at all? 
