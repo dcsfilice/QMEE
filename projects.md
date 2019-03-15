@@ -11,7 +11,9 @@ associated with this plasticity.
 2.) Males previously housed with rivals or housed alone will have differential effects on the lifetime offspring production of their mates
 
 3.) There will be signifcant genetic variation associated with both these effects (i.e. in the plasticity)
-For the final project I plan on using a combination of mixed model techniques, permutation testing, and perhaps other multivariate statistical methods such as principal component analyses.
+
+For the final project I plan on using a combination of mixed model techniques, permutation testing, and perhaps other multivariate
+statistical methods such as principal component analyses.
 
 # Analysis methods
 1.) Primarily, these 3 predictions provide a good oppritunity to work with mixed models. Lifespan can be analyzed with a linear mixed model, and lifetime offspring production with a generalized linear mixed model (poisson distribution).
