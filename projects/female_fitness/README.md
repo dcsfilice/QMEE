@@ -28,14 +28,15 @@ Specficially, we predict:
 
 # Analysis plans
 The main goal is to indepedently analyze the lifespan and offspring data by taking a mixed-modelling approach.
+
 1.) Lifespan can be analyzed with a linear mixed model.
 
-2.) lifetime offspring production with a generalized linear mixed model (poisson distribution).
+2.) Lifetime offspring production with a generalized linear mixed model (poisson distribution).
 
 To analyze our models, we will use the Anova function in the car package to test the significance of our fixed effects (and their 
 interactions).
 Furthermore, we will estimate the upper and lower 95% CI of the variance components of our random effects using a bootstrapping approach, 
-and estimate p-values using a permutation test approach (i.e. how frequently does a permutated data return a var component greater than 
+and estimate p-values using a permutation test approach (i.e. how frequently does a permutated data return a variance component greater than 
 our calculated one?)
 
 Finally, we want to do some sort of combined analysis in order to estimate total female fitness. After further thought, I realized it 
