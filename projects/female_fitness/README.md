@@ -5,7 +5,7 @@ The second data set (offspring.csv) contains the number of progeny each female p
 perished before the 20th day). Offspring were counted every day, meaning each individual female has a repeated measure of up to 10 
 offspring counts.
 
-In both data sets, females were exposed a male every other day over 20 days (unless they died before the 20th day). We manipulated the 
+In both data sets, females were exposed to a male every other day over 20 days (unless they died before the 20th day). We manipulated the 
 experience of these males by either housing them alone in a vial or in a vial with two rivals for 3 days prior to the female exposure. 
 Additionally, we used males from 6 randomly selected clonal backgrounds. Females were randomly assigned to be paired with one of these 
 experience x clonal combinations. Finally, we collected both data sets using two different female populations. One of these populations is 
