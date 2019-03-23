@@ -16,7 +16,7 @@ for over 30 years.
 For background, please refer to the main repo README.
 Broadly, we want to determine how these different conditions (experience and genotype of previous mate, population history) influence
 lifetime female fitness by measuring her lifespan and offspring production. 
-Specficially, we predict:
+Specifically, we predict:
 
 1.) Males previously housed with rival males will reduce the lifespan of their mates
 
