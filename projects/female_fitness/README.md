@@ -24,7 +24,7 @@ Specifically, we predict:
 
 2.) Males previously housed with rivals or housed alone will have differential effects on the lifetime offspring production of their mates
 
-3.) There will be signifcant genetic variation associated with both these effects (i.e. in the plasticity)
+3.) There will be significant genetic variation associated with both these effects (i.e. in the plasticity)
 
 4.) Ultimately, females mated to males housed alone will have higher fitness
 
