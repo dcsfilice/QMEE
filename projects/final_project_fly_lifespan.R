@@ -9,7 +9,7 @@ library(lme4)
 library(lmPerm)
 library(car)
 library(ggplot2); theme_set(theme_bw())
-
+setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
 # Read in our main data frame of female fly lifespan
 fly_dat1 <- read.csv("lifespan.csv")
@@ -136,7 +136,7 @@ shapiro.test(fly_dat2$log_lifespan)
 
 library(MASS)
 
-Box = boxcox(lifespan ~ pop,
+Box = boxcox(lifespan ~ treatment*pop,
              data = fly_dat1,
              lambda = seq(-6,6,0.1)
 )
@@ -155,7 +155,6 @@ boxplot(lifespan_box ~ pop,
         data = fly_dat1,
         ylab="Box–Cox-transformed lifespan",
         xlab="Population")
-
 
 
 ##Perform ANOVA and check residuals
