@@ -28,21 +28,23 @@ str(fly_dat1)
 ## TRANSFORMATIONS
 
 ## Log transform female lifespan
-fly_dat2 <- fly_dat1 %>%  
-  mutate(log_lifespan = log(lifespan))
+fly_dat1$log_lifespan = log(fly_dat1$lifespan)
 
 ## Box.Cox transform female lifespan
 library(MASS)
 
 Box = boxcox(lifespan ~ treatment*pop,
              data = fly_dat1,
-             lambda = seq(-6,6,0.1)
+             lambda = seq(-1,1,0.025)
 )
 Cox = data.frame(Box$x, Box$y)
 Cox2 = Cox[with(Cox, order(-Cox$Box.y)),]
 Cox2[1,]
 lambda = Cox2[1, "Box.x"]
-fly_dat1$lifespan_box = (fly_dat1$lifespan ^ lambda - 1)/lambda   
+
+#Since lambda is very close to 0.5, we decided to square root transform the data (y^0.5)
+
+fly_dat1$sqrt_lifespan (fly_dat1$sqrt(lifespan)
 
 ##Perform ANOVA on Box.Cox transformed liFEspan and check residuals
 model = lm(lifespan_box ~ pop, 
@@ -62,14 +64,14 @@ h1 <- ggplot(data=fly_dat1, aes(lifespan)) +
 # ggsave("histogram_female-lifespan.png", plot = h1, width = 8, height = 4, dpi = "print")
 
 # Log tranformed
-h2 <- ggplot(data=fly_dat2, aes(log_lifespan)) + 
+h2 <- ggplot(data=fly_dat1, aes(log_lifespan)) + 
   geom_histogram()
 # ggsave("histogram_female-log_lifespan.png", plot = h2, width = 8, height = 4, dpi = "print")
 
 # Box.Cox transformed    HAVING SOME DIFFICULTY WITH THIS?
 library(rcompanion)
 plotNormalHistogram(x)
-# h3 <- ggplot(data=fly_dat2, aes(log_lifespan)) + 
+# h3 <- ggplot(data=fly_dat1, aes(log_lifespan)) + 
 #  geom_histogram()
 # ggsave("histogram_female-log_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
 
@@ -78,10 +80,10 @@ plotNormalHistogram(x)
 
 # Use Shapiro-Wilk test to test normality of 
 # raw lifespan vs log_lifespan vx Box.Cox_lifespan
-# If p>0.5 then data is normally distributed
+# If p>0.05 then data is normally distributed
 shapiro.test(fly_dat1$lifespan)
-shapiro.test(fly_dat2$log_lifespan)
-shapiro.test(fly_dat2$log_lifespan) #this one needs to be FIXED for the Box.Cox
+shapiro.test(fly_dat1$log_lifespan)
+shapiro.test(fly_dat1$sqrt_lifespan)
 
 
 ## DIAGNOSTIC PLOTS
@@ -89,31 +91,36 @@ shapiro.test(fly_dat2$log_lifespan) #this one needs to be FIXED for the Box.Cox
 ## Check diagnostic plots
 par(mfrow=c(2,2))  # show four graphs in one panel
 
+#maximal model, singular fit
+model1a<-lmer(lifespan~treatment*pop+(treatment*pop|line),data=fly_dat1)
+#simplified model
+model1b<-lmer(lifespan~treatment*pop+(1|line),data=fly_dat1)
+
 # Non transformed female lifespan
-fly_dat1.lm <- lm(lifespan~treatment, data = fly_dat1)
+fly_dat1.lm <- lmer(lifespan~treatment*pop+(1|line), data = fly_dat1)
 diag1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
 # ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
 
 
 # Log transformed female lifespan
-fly_dat2.lm <- lm(log_lifespan~treatment, data = fly_dat2)
+fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat2)
 diag2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
 # ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
 
 
 # Box.cox transformed female lifespan
-# I'm not sure how to do this one?
-#fly_dat2.lm <- lm(log_lifespan~treatment, data = fly_dat2)
-#diag3 <- plot(lm(fly_dat2.lm), las = 1, col = "green")  # no issues in these plots?
+fly_dat3.lm <- lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
+diag3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
 # ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
 
 
 ## Comment here about Box.Cox transformations
-# 
-
 ## Comments about summary stats for each transformation?
-
-
+# David
+sqrt_model<-lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
+summary(sqrt_model)
+library(dotwhisker)
+dwplot(box_model)
 
 
 
@@ -258,7 +265,7 @@ summary(model2b)
 
 # How does effects plot changes after running mixed model
 plot(allEffects(fly_dat2.lmer))
-plot(allEffects(model2b))
+plot(allEffects(model1b))
 
 # Use a histogram to look at distribution of lifespan vs log_lifespan
 ggplot(data=fly_dat1, aes(lifespan)) + 
@@ -355,3 +362,14 @@ plotNormalHistogram(x)
   iris <- iris %>% mutate(cSepal.Length = Sepal.Length - mean(Sepal.Length))
   m1 <- lm(Sepal.Width ~ cSepal.Length * Species, data = iris)
   (summary_m1 <- summary(m1))
+  
+  
+  
+  
+  ggplot(fly_dat1,aes(x=as.numeric(treatment),y=lifespan_box,colour=pop))+
+    theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+
+    scale_colour_hue(l=60)+
+    theme(text=element_text(family="Times",size=20))+
+    xlab("Male experience")+
+    ylab("Lifespan")+geom_point(shape=1)+
+    geom_smooth(method="lm",alpha=0.1)
