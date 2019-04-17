@@ -11,15 +11,105 @@ library(car)
 library(ggplot2); theme_set(theme_bw())
 setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
+
+### THIS SECTION DISCUSSES DIAGNOSTICS AND COMPARES 
+# RAW DATA VS TRANSFORMED DATA  VS BOX.COX TRANSFORMED DATA
+
+
 # Read in our main data frame of female fly lifespan
 fly_dat1 <- read.csv("lifespan.csv")
 
-
 # Check that data was read in properly
-summary(fly_dat1)
+summary(fly_dat1)   # STILL NOT SEEING POP IN MY DATAFRAME????
 str(fly_dat1)
 # No cleaning needed :-)
 
+
+## Log transform female lifespan
+fly_dat2 <- fly_dat1 %>%  
+  mutate(log_lifespan = log(lifespan))
+
+## Box.Cox transform female lifespan
+library(MASS)
+
+Box = boxcox(lifespan ~ treatment*pop,
+             data = fly_dat1,
+             lambda = seq(-6,6,0.1)
+)
+Cox = data.frame(Box$x, Box$y)
+Cox2 = Cox[with(Cox, order(-Cox$Box.y)),]
+Cox2[1,]
+lambda = Cox2[1, "Box.x"]
+fly_dat1$lifespan_box = (fly_dat1$lifespan ^ lambda - 1)/lambda   
+
+##Perform ANOVA on Box.Cox transformed liFEspan and check residuals
+model = lm(lifespan_box ~ pop, 
+           data=fly_dat1)
+library(car)
+Anova(model, type="II")
+x = residuals(model)
+
+
+## Plot histograms of female lifespan data
+
+# Non transformed
+h1 <- ggplot(data=fly_dat1, aes(lifespan)) + 
+  geom_histogram()
+# ggsave("histogram_female-lifespan.png", plot = h1, width = 8, height = 4, dpi = "print")
+
+# Log tranformed
+h2 <- ggplot(data=fly_dat2, aes(log_lifespan)) + 
+  geom_histogram()
+# ggsave("histogram_female-log_lifespan.png", plot = h2, width = 8, height = 4, dpi = "print")
+
+# Box.Cox transformed    HAVING SOME DIFFICULTY WITH THIS?
+library(rcompanion)
+plotNormalHistogram(x)
+# h3 <- ggplot(data=fly_dat2, aes(log_lifespan)) + 
+#  geom_histogram()
+# ggsave("histogram_female-log_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
+
+
+# Use Shapiro-Wilk test to test normality of 
+# raw lifespan vs log_lifespan vx Box.Cox_lifespan
+# If p>0.5 then data is normally distributed
+shapiro.test(fly_dat1$lifespan)
+shapiro.test(fly_dat2$log_lifespan)
+shapiro.test(fly_dat2$log_lifespan) #this one needs to be FIXED for the Box.Cox
+
+
+## Check diagnostic plots
+par(mfrow=c(2,2))  # show four graphs in one panel
+
+# Non transformed female lifespan
+fly_dat1.lm <- lm(lifespan~treatment, data = fly_dat1)
+diag1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
+# ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
+
+
+# Log transformed female lifespan
+fly_dat2.lm <- lm(log_lifespan~treatment, data = fly_dat2)
+diag2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
+# ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
+
+
+# Box.cox transformed female lifespan
+# I'm not sure how to do this one?
+fly_dat2.lm <- lm(log_lifespan~treatment, data = fly_dat2)
+diag3 <- plot(lm(fly_dat2.lm), las = 1, col = "green")  # no issues in these plots?
+# ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
+
+
+# Comment here about Box.Cox transformation
+# Comments about summary stats for each transformation?
+
+
+
+
+
+
+
+###**********  EVERYTHING BELOW THIS LINE IS IN PROGRESS
 
 ## Compare lifespan between females 
 # TREATMENT mated with males housed either SINGLE or with RIVALS
@@ -63,6 +153,15 @@ summary(model1b)
 # How does effects plot changes after running mixed model
 plot(allEffects(fly_dat1.lmer))
 plot(allEffects(model1b))
+
+
+# Use Shapiro-Wilk test to test normality of 
+# raw lifespan vs log_lifespan vx Box.Cox_lifespan
+# If p>0.5 then data is normally distributed
+shapiro.test(fly_dat1$lifespan)
+shapiro.test(fly_dat2$log_lifespan)
+
+
 
 
 ####### NOW start working with log transformed data (female lifespan)
