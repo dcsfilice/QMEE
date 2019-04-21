@@ -62,13 +62,13 @@ x = residuals(model)
 h1 <- ggplot(data=fly_dat1, aes(lifespan)) +
   ggtitle("Female Lifespan, non-transformed") +
   geom_histogram()
-# ggsave("histogram_female-lifespan.png", plot = h1, width = 8, height = 4, dpi = "print")
+ggsave("histogram_female-lifespan.png", plot = h1, width = 8, height = 4, dpi = "print")
 
 # Log tranformed
 h2 <- ggplot(data=fly_dat1, aes(log_lifespan)) + 
   ggtitle("Female Lifespan, log transformed") + 
   geom_histogram()
-# ggsave("histogram_female-log_lifespan.png", plot = h2, width = 8, height = 4, dpi = "print")
+ggsave("histogram_female-log_lifespan.png", plot = h2, width = 8, height = 4, dpi = "print")
 
 # Square Root transformed    
 #library(rcompanion)
@@ -76,7 +76,7 @@ h2 <- ggplot(data=fly_dat1, aes(log_lifespan)) +
 h3 <- ggplot(data=fly_dat1, aes(sqrt_lifespan)) + 
   ggtitle("Female Lifespan, square root transformed")+ 
   geom_histogram()
-# ggsave("histogram_female-sqrt_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
+ggsave("histogram_female-sqrt_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
 
 ## NORMALITY TEST
 
@@ -100,17 +100,17 @@ model1b<-lmer(lifespan~treatment*pop+(1|line),data=fly_dat1)
 # Non transformed female lifespan
 fly_dat1.lm <- lmer(lifespan~treatment*pop+(1|line), data = fly_dat1)
 diagnos1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
-# ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
+ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
 
 # Log transformed female lifespan
 fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat1)
 diagnos2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
-# ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
+ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
 
 # Square Root transformed female lifespan
 fly_dat3.lm <- lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
 diagnos3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
-# ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
+ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
 
 # Based on our various diagnostics, it appears lifespan square-root transformed is the best fit
 # Looking at residuals:
