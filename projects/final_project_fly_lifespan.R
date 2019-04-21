@@ -122,13 +122,29 @@ diag3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plo
 
 #Therefore, let's go ahead with using the sqrt transformed model to statistically test our prediction
 sqrt_model<-lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
-summary(sqrt_model)
-confint(sqrt_model)
+
+#test statistics of fixed and random effects
+#summary(sqrt_model)
+#confint(sqrt_model)
 
 library(dotwhisker)
-dwplot(sqrt_model)
+#dwplot(sqrt_model)
 
+#p-value for random effect, using a permutation appraoch
+nreps<-1000
+per.line<-numeric(nreps)
+per.line[1]<-as.data.frame(VarCorr(sqrt_model))[1,"vcov"]
+for (i in 2:nreps) {
+  perm.data <- fly_dat1[sample(nrow(fly_dat1),size=nrow(fly_dat1),replace=FALSE),]
+  lmer.perm <- lmer(perm.data$sqrt_lifespan~treatment*pop+(1|line), data=fly_dat1)
+  per.line[i] <- as.data.frame(VarCorr(lmer.perm))[1,4]
+}
+length(per.line[per.line >= per.line[1]])/nreps
 
+#Finally, let's compare this outcome to the cox hazard appraoch
+library(coxme)
+survmodel<-coxme(Surv(lifespan) ~ treatment*pop + (1|line) , data=fly_dat1) 
+summary(survmodel)
 
 ######  sum-to-zero contrasts :-)
 #  http://atyre2.github.io/2016/09/03/sum-to-zero-contrasts.html  
