@@ -8,6 +8,7 @@ library(tidyverse)
 library(lme4)
 library(lmPerm)
 library(car)
+library(lmerTest)
 library(ggplot2); theme_set(theme_bw())
 setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
