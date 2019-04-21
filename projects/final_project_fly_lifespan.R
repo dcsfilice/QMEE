@@ -44,7 +44,7 @@ lambda = Cox2[1, "Box.x"]
 
 #Since lambda is very close to 0.5, we decided to square root transform the data (y^0.5)
 
-fly_dat1$sqrt_lifespan (fly_dat1$sqrt(lifespan)
+fly_dat1$sqrt_lifespan = sqrt(fly_dat1$lifespan)
 
 ##Perform ANOVA on Box.Cox transformed liFEspan and check residuals
 model = lm(lifespan_box ~ pop, 
