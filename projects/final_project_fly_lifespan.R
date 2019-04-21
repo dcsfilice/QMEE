@@ -11,10 +11,10 @@ library(car)
 library(ggplot2); theme_set(theme_bw())
 setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
-
+#First, we want to use a linear model to look at lifespan as a continuous, gaussian response
+#Before we do that, we should compare how well some transformations fit a linear model
 ## THIS SECTION DISCUSSES DIAGNOSTICS AND COMPARES FEMALE LIFESPAN:
 # RAW DATA VS LOG_TRANSFORMED DATA  VS BOX.COX TRANSFORMED DATA
-
 
 # Read in our main data frame of female fly lifespan
 fly_dat1 <- read.csv("lifespan.csv")
@@ -75,16 +75,14 @@ plotNormalHistogram(x)
 #  geom_histogram()
 # ggsave("histogram_female-log_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
 
-
 ## NORMALITY TEST
 
 # Use Shapiro-Wilk test to test normality of 
-# raw lifespan vs log_lifespan vx Box.Cox_lifespan
+# raw lifespan vs log_lifespan vs sqrt_lifespan
 # If p>0.05 then data is normally distributed
 shapiro.test(fly_dat1$lifespan)
 shapiro.test(fly_dat1$log_lifespan)
 shapiro.test(fly_dat1$sqrt_lifespan)
-
 
 ## DIAGNOSTIC PLOTS
 
@@ -101,26 +99,34 @@ fly_dat1.lm <- lmer(lifespan~treatment*pop+(1|line), data = fly_dat1)
 diag1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
 # ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
 
-
 # Log transformed female lifespan
-fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat2)
+fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat1)
 diag2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
 # ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
-
 
 # Box.cox transformed female lifespan
 fly_dat3.lm <- lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
 diag3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
 # ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
 
+# Based on our various diagnostics, it appears lifespan square-root transformed is the best fit
+# Looking at residuals:
+#1.) Linearity: The slope is the most horizontal in our sqrt transformed data, meaning it is most linear
+#2.) Normality: The residuals all look relatively normal, but most of the residuals fit best in sqrt transformation
+#3.) Heteroscadicity: Slope isn't perfectly zero suggesting some heteroscadicity, but it is most horizontal in our sqrt transformation
+#4.) Outliers: No problematic outliers in any of our transformations
 
-## Comment here about Box.Cox transformations
-## Comments about summary stats for each transformation?
-# David
+#Looking at raw data:
+#Shapiro-wilk test and histograms
+#Looking at the raw data, the distribtion looks most normal (visually, and highest shapiro-wilk test value) when sqrt transformed
+
+#Therefore, let's go ahead with using the sqrt transformed model to statistically test our prediction
 sqrt_model<-lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
 summary(sqrt_model)
+confint(sqrt_model)
+
 library(dotwhisker)
-dwplot(box_model)
+dwplot(sqrt_model)
 
 
 
