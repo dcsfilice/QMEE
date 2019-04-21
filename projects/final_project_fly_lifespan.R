@@ -145,7 +145,7 @@ base_lifespan <- ggplot(fly_dat1, aes(x = lifespan, y = treatment)) + geom_point
   xlab("female lifespan") + ylab("proportion females alive")
 
 library(broom)
-nd <- expand.grid(Sepal.Length = seq(-1, 8, 0.1), Species = factor(levels(iris$Species)))
+nd <- expand.grid(lifespan = seq(-1, 8, 0.1), Species = factor(levels(iris$Species)))
 pred.0 <- augment(m0, newdata = nd)
 base_iris + geom_line(aes(y = .fitted, linetype = Species), data = pred.0)    
 
