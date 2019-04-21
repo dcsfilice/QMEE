@@ -8,7 +8,6 @@ library(tidyverse)
 library(lme4)
 library(lmPerm)
 library(car)
-library(lmerTest)
 library(ggplot2); theme_set(theme_bw())
 setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
@@ -60,21 +59,24 @@ x = residuals(model)
 ## Plot histograms of female lifespan data
 
 # Non transformed
-h1 <- ggplot(data=fly_dat1, aes(lifespan)) + 
+h1 <- ggplot(data=fly_dat1, aes(lifespan)) +
+  ggtitle("Female Lifespan, non-transformed") +
   geom_histogram()
 # ggsave("histogram_female-lifespan.png", plot = h1, width = 8, height = 4, dpi = "print")
 
 # Log tranformed
 h2 <- ggplot(data=fly_dat1, aes(log_lifespan)) + 
+  ggtitle("Female Lifespan, log transformed") + 
   geom_histogram()
 # ggsave("histogram_female-log_lifespan.png", plot = h2, width = 8, height = 4, dpi = "print")
 
-# Box.Cox transformed    HAVING SOME DIFFICULTY WITH THIS?
-library(rcompanion)
-plotNormalHistogram(x)
-# h3 <- ggplot(data=fly_dat1, aes(log_lifespan)) + 
-#  geom_histogram()
-# ggsave("histogram_female-log_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
+# Square Root transformed    
+#library(rcompanion)
+#plotNormalHistogram(x)
+h3 <- ggplot(data=fly_dat1, aes(sqrt_lifespan)) + 
+  ggtitle("Female Lifespan, square root transformed")+ 
+  geom_histogram()
+# ggsave("histogram_female-sqrt_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
 
 ## NORMALITY TEST
 
@@ -97,17 +99,17 @@ model1b<-lmer(lifespan~treatment*pop+(1|line),data=fly_dat1)
 
 # Non transformed female lifespan
 fly_dat1.lm <- lmer(lifespan~treatment*pop+(1|line), data = fly_dat1)
-diag1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
+diagnos1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
 # ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
 
 # Log transformed female lifespan
 fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat1)
-diag2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
+diagnos2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
 # ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
 
-# Box.cox transformed female lifespan
+# Square Root transformed female lifespan
 fly_dat3.lm <- lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
-diag3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
+diagnos3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
 # ggsave("diagnostic_female-Box.Cox_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
 
 # Based on our various diagnostics, it appears lifespan square-root transformed is the best fit
@@ -147,43 +149,31 @@ library(coxme)
 survmodel<-coxme(Surv(lifespan) ~ treatment*pop + (1|line) , data=fly_dat1) 
 summary(survmodel)
 
-######  sum-to-zero contrasts :-)
-#  http://atyre2.github.io/2016/09/03/sum-to-zero-contrasts.html  
 
+# What happens if try a sum-to-zero contrast for female lifespan?
 
-## STEPS  
-# plot the data to find the intercept
+# Look at the original model  
+m_original <- lm(lifespan ~ treatment * pop, data = fly_dat1)
+(summary_m_original <- summary(m_original)) 
+
 # center the continuous variable
-# replot the data  
-# use sum to zero contrast for female population
-
-# plot the data to find the intercept  
-m0 <- lm(lifespan ~ treatment * pop, data = fly_dat1)
-(summary_m0 <- summary(m0)) 
+library(dplyr) 
+fly_dat1 <- fly_dat1 %>% mutate(clifespan = lifespan - mean(lifespan))
+m_centered <- lm(clifespan ~ treatment * pop, data = fly_dat1)
+(summary_m_centered <- summary(m_centered))
 
 
-#####  LEFT OFF HERE!!!  Still working on this 
-# center the continuous variable
-base_lifespan <- ggplot(fly_dat1, aes(x = lifespan, y = treatment)) + geom_point(aes(shape = Species)) + 
-  xlab("female lifespan") + ylab("proportion females alive")
+# Compare the original model with a model containing centred female lifespan
+anova(m_original)
+anova(m_centered)
 
-library(broom)
-nd <- expand.grid(lifespan = seq(-1, 8, 0.1), Species = factor(levels(iris$Species)))
-pred.0 <- augment(m0, newdata = nd)
-base_iris + geom_line(aes(y = .fitted, linetype = Species), data = pred.0)    
-
-library(dplyr)  #Stay in the tidyverse! 
-iris <- iris %>% mutate(cSepal.Length = Sepal.Length - mean(Sepal.Length))
-m1 <- lm(Sepal.Width ~ cSepal.Length * Species, data = iris)
-(summary_m1 <- summary(m1))
+# Make some comments here about the comparison
+# Should we use the full mixed effects model here?
 
 
 
 
-
-
-
-
+#####  LEFT OFF HERE!!!  Still working on this Apr 21, 2019
 ###**********  EVERYTHING BELOW THIS LINE IS THE ORIGINAL SCRIPT WE WERE WORKING WITH
 
 ## Compare lifespan between females 
@@ -198,24 +188,20 @@ summary(fly_dat1.lm)
 par(mfrow=c(2,2))  # show four graphs in one panel
 plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?
 
-
 # Look at the the data 
 print(ggplot(fly_dat1.lm, aes(x=treatment, y=lifespan))
       + geom_boxplot()
 )
 
-
 # Plot an effects plot 
 library(effects)
 plot(allEffects(fly_dat1.lm))
-
 
 ## Design the mixed model to include these parameters:
 # FIXED effect: female line (factor with 2 levels) 
 # RANDOM effect: male clonal backgrounds (factor with 6 levels)
 fly_dat1.lmer <-  lmer(lifespan~treatment + (1|line), data=fly_dat1)
 model1b <- lmer(lifespan ~ treatment * pop + (1|line), data=fly_dat1)
-
 
 # Check summary stats for the model
 summary(fly_dat1.lmer)  
@@ -224,49 +210,13 @@ summary(model1b)
 # Therefore random effect of ? has ? impact
 # on overall model?
 
-
 # How does effects plot changes after running mixed model
 plot(allEffects(fly_dat1.lmer))
 plot(allEffects(model1b))
 
-
-# Use Shapiro-Wilk test to test normality of 
-# raw lifespan vs log_lifespan vx Box.Cox_lifespan
-# If p>0.5 then data is normally distributed
-shapiro.test(fly_dat1$lifespan)
-shapiro.test(fly_dat2$log_lifespan)
-
-
-
-
-####### NOW start working with log transformed data (female lifespan)
-
-fly_dat2 <- fly_dat1 %>%  
-  mutate(log_lifespan = log(lifespan))
-
-## Compare lifespan between females 
-# TREATMENT mated with males housed either SINGLE or with RIVALS
-# RESPONSE lifespan of individual female by treatment
-
-fly_dat2.lm <- lm(log_lifespan~treatment, data = fly_dat2)
-summary(fly_dat2.lm)
-
-
-# Check diagnostic plots
-par(mfrow=c(2,2))  # show four graphs in one panel
-plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
-
-
-# Look at the the data 
-print(ggplot(fly_dat2.lm, aes(x=treatment, y=log_lifespan))
-      + geom_boxplot()
-)
-
-
 # Plot an effects plot 
 library(effects)
 plot(allEffects(fly_dat2.lm))
-
 
 ## Design the mixed model to include these parameters:
 # FIXED effect: female line (factor with 2 levels)
@@ -276,7 +226,6 @@ plot(allEffects(fly_dat2.lm))
 fly_dat2.lmer <-  lmer(log_lifespan~treatment + (1|line), data=fly_dat2)
 model2b <- lmer(log_lifespan ~ treatment * pop + (1|line), data=fly_dat2)
 
-
 # Check summary stats for the model (Again these are the same)
 summary(fly_dat2.lmer)  
 summary(model2b)
@@ -284,7 +233,6 @@ summary(model2b)
 # Var and Std Dev is low/high for Random Effects?
 # Therefore random effect of ? has ? impact
 # on overall model?
-
 
 # How does effects plot changes after running mixed model
 plot(allEffects(fly_dat2.lmer))
@@ -296,55 +244,6 @@ ggplot(data=fly_dat1, aes(lifespan)) +
 
 ggplot(data=fly_dat2, aes(log_lifespan)) + 
   geom_histogram()
-
-# Use Shapiro-Wilk test to test normality of lifespan vs log_lifespan
-# If p>0.5 then data is normally distributed
-shapiro.test(fly_dat1$lifespan)
-shapiro.test(fly_dat2$log_lifespan)
-
-
-
-## *********************************
-# Here goes for the Box-Cox transformation  :-O
-# http://rcompanion.org/handbook/I_12.html
-
-library(MASS)
-
-Box = boxcox(lifespan ~ treatment*pop,
-             data = fly_dat1,
-             lambda = seq(-6,6,0.1)
-)
-
-Cox = data.frame(Box$x, Box$y)
-
-Cox2 = Cox[with(Cox, order(-Cox$Box.y)),]
-
-Cox2[1,]
-
-lambda = Cox2[1, "Box.x"]
-
-fly_dat1$lifespan_box = (fly_dat1$lifespan ^ lambda - 1)/lambda   
-
-boxplot(lifespan_box ~ pop,
-        data = fly_dat1,
-        ylab="Box–Cox-transformed lifespan",
-        xlab="Population")
-
-
-##Perform ANOVA and check residuals
-
-model = lm(lifespan_box ~ pop, 
-           data=fly_dat1)
-
-library(car)
-
-Anova(model, type="II")
-                
-x = residuals(model)
-
-library(rcompanion)
-plotNormalHistogram(x)
-
 
 ###### This is useful for printing ggplots to our folder
 
@@ -360,7 +259,6 @@ plotNormalHistogram(x)
 
 ######  sum-to-zero contrasts :-)
 #  http://atyre2.github.io/2016/09/03/sum-to-zero-contrasts.html  
-  
   
 ## STEPS  
 # plot the data to find the intercept
@@ -386,8 +284,7 @@ plotNormalHistogram(x)
   m1 <- lm(Sepal.Width ~ cSepal.Length * Species, data = iris)
   (summary_m1 <- summary(m1))
   
-  
-  
+
   
   ggplot(fly_dat1,aes(x=as.numeric(treatment),y=lifespan_box,colour=pop))+
     theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+
