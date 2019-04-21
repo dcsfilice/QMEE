@@ -11,6 +11,7 @@ ggplot(data,aes(x= as.factor(day),y= mean,group=treatment))+
   geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.15)+xlab("Female age (days)")+
   ylab("Mean offspring production")
 
+
 #SMR working on fixing the legend.  GETTING CLOSER! 
 ggplot(data,aes(x= as.factor(day),y= mean,group=treatment))+
   theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+ 
@@ -23,10 +24,28 @@ ggplot(data,aes(x= as.factor(day),y= mean,group=treatment))+
   legend.position = c(0.97, 0.97),
   legend.justification = c("right", "top"),
   legend.box.background = element_rect(colour = "black",size=1),
-  legend.text = element_text(size = 10),
-  legend.box.margin = margin(4, 4, 4, 4),
+  legend.text = element_text(size = 8),
+  legend.box.margin = margin(4, 4, 4, 4),)
+  
+  
+## Possible ways to work on changing the legend box to have
+  # male experience
+    # single "grey line"
+    # rival  "black line"
+  # female population
+    # wild  "solid line"
+    # lab  "dashed line"
+
+
+#legend.title = title(colour="male experience", linetype="female population"),
+
+#  guides(fill = colour = "male experience"))
+
 #  legend.text = element_text(colour = "male experience", linetype = "female population"),
-  labs(colour = "male experience"),
-  labs(linetype = "female population")
-)
-    
+
+#  scale_fill_discrete(name = "Title", labels = c("a", "b") colour = "male experience"),
+
+# label(linetype = "female population")
+
+## theme(legend.title = element_blank()
+#labs(fill = "Dose (mg)")
