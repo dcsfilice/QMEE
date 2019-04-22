@@ -1,5 +1,3 @@
-#### Final QMEE project with David :-)
-
 ### Question 1.  
 ## HYPOTHESIS: Males previously housed with rival males will reduce the lifespan 
 # of their female mates
@@ -24,7 +22,6 @@ summary(fly_dat1)
 str(fly_dat1)
 # No cleaning needed :-)
 
-
 ## TRANSFORMATIONS
 
 ## Log transform female lifespan
@@ -45,7 +42,6 @@ lambda = Cox2[1, "Box.x"]
 #Since lambda is very close to 0.5, we decided to square root transform the data (y^0.5)
 
 fly_dat1$sqrt_lifespan = sqrt(fly_dat1$lifespan)
-
 
 ## HISTOGRAMS OF FEMALE LIFESPAN (3 THREE VERSIONS)
 
@@ -68,7 +64,6 @@ h3 <- ggplot(data=fly_dat1, aes(sqrt_lifespan)) +
   ggtitle("Female Lifespan, square root transformed")+ 
   geom_histogram()
 ggsave("histogram_female-sqrt_lifespan.png", plot = h3, width = 8, height = 4, dpi = "print")
-
 
 ## NORMALITY TEST
 
@@ -141,7 +136,4 @@ library(coxme)
 survmodel<-coxme(Surv(lifespan) ~ treatment*pop + (1|line) , data=fly_dat1) 
 summary(survmodel)
 
-
 # End script
-
-

@@ -1,3 +1,6 @@
+### Question 2.  
+## HYPOTHESIS: Males previously housed with rival males will reduce the offspring production
+# of their female mates
 library(lme4)
 library(car)
 dat1 <- read.csv("offspring.num.csv")
