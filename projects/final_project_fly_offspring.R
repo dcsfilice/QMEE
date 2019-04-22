@@ -1,12 +1,6 @@
 library(lme4)
-library(coxme)
 library(car)
 dat1 <- read.csv("offspring.num.csv")
-dat2 <- read.csv("lifespan.csv")
-
-model1c<-coxme(Surv(lifespan) ~ treatment*pop + (1|line) , data=dat2)  
-Anova(model1c)
-summary(model1c)  
 
 #maximal model, count data, let's try a poisson distribution
 model2a<-glmer(offspring~treatment*day*pop+(treatment*pop|line)+((poly(day,2))-1|line)+(poly(day,2)|female),data=dat1,family=quasipoisson)
