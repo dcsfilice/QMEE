@@ -2,8 +2,13 @@
 ## HYPOTHESIS: Males previously housed with rival males will reduce the offspring production
 # of their female mates
 library(lme4)
+library(tidyverse)
 library(car)
 dat1 <- read.csv("offspring.num.csv")
+
+#summary(dat1)   
+#str(dat1)
+#No cleaning needed.
 
 #maximal model, count data, let's try a poisson distribution
 model2a<-glmer(offspring~treatment*day*pop+(treatment*pop|line)+((poly(day,2))-1|line)+(poly(day,2)|female),data=dat1,family=quasipoisson)
@@ -32,6 +37,19 @@ overdisp_fun(model2c)
 #Model no longer looks overdispersed! 
 summary(model2c)
 
+#Calculate confidence intervals
 confint(model2c,method="uniroot")
+
+#Offspring plot
+
+dat2<-read.csv("offspringfig.csv")
+attach(dat2)
+ggplot(dat2,aes(x= as.factor(day),y= mean,group=treatment))+
+  theme_bw()+theme(panel.border = element_rect(linetype = "solid", colour = "black",size=1))+ 
+  theme(text=element_text(family="Times",size=20))+geom_line(aes(linetype= treatment),colour=colour)+
+  geom_point(aes(group= treatment))+
+  scale_linetype_manual(values=c("solid","dashed","solid","dashed"))+
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width=.15)+xlab("Female age (days)")+
+  ylab("Mean offspring production")
 
 #End script.

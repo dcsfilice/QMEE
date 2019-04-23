@@ -7,7 +7,6 @@ library(lme4)
 library(lmPerm)
 library(car)
 library(ggplot2); theme_set(theme_bw())
-setwd("~/R/STATS CLASS/QMEE_repo/projects")
 
 #First, we want to use a linear model to look at lifespan as a continuous, gaussian response
 #Before we do that, we should compare how well some transformations fit a linear model
@@ -18,8 +17,8 @@ setwd("~/R/STATS CLASS/QMEE_repo/projects")
 fly_dat1 <- read.csv("lifespan.csv")
 
 # Check that data was read in properly
-summary(fly_dat1)   
-str(fly_dat1)
+#summary(fly_dat1)   
+#str(fly_dat1)
 # No cleaning needed :-)
 
 ## TRANSFORMATIONS
@@ -86,18 +85,18 @@ model1b<-lmer(lifespan~treatment*pop+(1|line),data=fly_dat1)
 
 # Non transformed female lifespan
 fly_dat1.lm <- lmer(lifespan~treatment*pop+(1|line), data = fly_dat1)
-diagnos1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
-ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
+#diagnos1 <- plot(lm(fly_dat1.lm), las = 1, col = "purple")  # no issues in these plots?x
+#ggsave("diagnostic_female-lifespan.png", plot = diag1, width = 8, height = 4, dpi = "print")
 
 # Log transformed female lifespan
 fly_dat2.lm <- lmer(log_lifespan~treatment*pop+(1|line), data = fly_dat1)
-diagnos2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
-ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
+#diagnos2 <- plot(lm(fly_dat2.lm), las = 1, col = "red")  # no issues in these plots?
+#ggsave("diagnostic_female-log_lifespan.png", plot = diag2, width = 8, height = 4, dpi = "print")
 
 # Square Root transformed female lifespan
 fly_dat3.lm <- lmer(sqrt_lifespan~treatment*pop+(1|line), data = fly_dat1)
-diagnos3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
-ggsave("diagnostic_female-square_root_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
+#diagnos3 <- plot(lm(fly_dat3.lm), las = 1, col = "green")  # no issues in these plots?
+#ggsave("diagnostic_female-square_root_lifespan.png", plot = diag3, width = 8, height = 4, dpi = "print")
 
 # Based on our various diagnostics, it appears lifespan square-root transformed is the best fit
 # Looking at residuals:
@@ -136,4 +135,10 @@ library(coxme)
 survmodel<-coxme(Surv(lifespan) ~ treatment*pop + (1|line) , data=fly_dat1) 
 summary(survmodel)
 
-# End script
+#Survival plot
+library(survminer)
+library(survival)
+fit<-survfit(Surv(lifespan)~treatment+pop,data=fly_dat1)
+#ggsurvplot(fit,data=fly_dat1,palette = c("black", "grey","grey","black"),linetype=c("solid","twodash","solid","twodash"),xlab="Female age", ylab="Proportion of females alive")
+
+# End script.
