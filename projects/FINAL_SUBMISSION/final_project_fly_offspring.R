@@ -11,7 +11,7 @@ dat1 <- read.csv("offspring.num.csv")
 #No cleaning needed.
 
 #maximal model, count data, let's try a poisson distribution
-model2a<-glmer(offspring~treatment*day*pop+(treatment*pop|line)+((poly(day,2))-1|line)+(poly(day,2)|female),data=dat1,family=quasipoisson)
+model2a<-glmer(offspring~treatment*day*pop+(treatment*pop|line)+((poly(day,2))-1|line)+(poly(day,2)|female),data=dat1,family=poisson)
 #singular fit
 
 #We reduced our random effect interactions until no singular fits
